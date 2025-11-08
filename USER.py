@@ -22,9 +22,12 @@ def lihatproduk():
     except FileNotFoundError:
         print("File tidak ditemukan.")
         return
+    gender = input("pilih gender(pria/wanita/unisex): ")
+    kategori = input("pilih kategori(atasan/bawahan/sepatu/pelengkap): ")
+    df = df[(df["gender"] == gender) & (df["kategori"] == kategori)]
     if df.empty:
-        print("Tidak ada data.")
-        return    
+        print("produk tidak ditemukan")
+        return
     table = PrettyTable()
     table.field_names = df.columns.tolist()
     for i, j in df.iterrows():

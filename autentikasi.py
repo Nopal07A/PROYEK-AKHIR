@@ -1,5 +1,5 @@
 from data import judul,info
-from USER import loginuser
+from user import loginuser
 from admin import loginadmin
 import pandas as pd
 import os
@@ -90,7 +90,7 @@ def login():
     if role is not None: 
         info(f"anda berhasil login sebagai {role}")
         if role == "admin":
-            loginadmin()
+            loginadmin(user)
         elif role == "user":
             loginuser(user)
     else:

@@ -8,7 +8,7 @@ while True:
     menu = [
         inquirer.List("opsi",
                     message="TOKO PORDUK FASHION",
-                    choices=["1.registrasi", "2.login", "3.keluar"],
+                    choices=["1. registrasi", "2. login", "3. keluar"],
                 ),
     ]
     answer = inquirer.prompt(menu)
@@ -28,4 +28,3 @@ while True:
 os.system('cls || clear')
 print("ANDA TELAH KELUAR".center(50))
 print("TERIMA KASIH SUDAH MENGGUNAKAN PROGRAM INI".center(50))
-

@@ -3,27 +3,10 @@ from data import judul
 from prettytable import PrettyTable
 import inquirer
 import os
+from read import lihatproduk
 
 def tambahproduk():
     print("tambah produk")
-
-def lihatproduk():
-    try:
-        df = pd.read_csv('produk.csv')
-    except FileNotFoundError:
-        print("File tidak ditemukan.")
-        return
-    gender = input("pilih gender(pria/wanita/unisex): ")
-    kategori = input("pilih kategori(atasan/bawahan/sepatu/pelengkap): ")
-    df = df[(df["gender"] == gender) & (df["kategori"] == kategori)]
-    if df.empty:
-        print("produk tidak ditemukan")
-        return
-    table = PrettyTable()
-    table.field_names = df.columns.tolist()
-    for i, j in df.iterrows():
-        table.add_row(j.tolist())
-    print(table)
 
 def updateproduk():
     print("update produk")
@@ -40,13 +23,13 @@ def laporanpenjualan():
 def hapususer():
     print("hapus user")
     
-def loginadmin():
+def loginadmin(username):
     while True:
         os.system("cls || clear")
         menuuser = [
             inquirer.List("opsi",
                     message="SILAHKAN PILIH OPSI",
-                    choices=["1.tambah produk", "2.lihat produk", "3.update produk", "4.hapus produk", "5.verifikasi top up", "6.laporan penjualan", "7.hapus user", "8.keluar"],
+                    choices=["1. tambah produk", "2. lihat produk", "3. update produk", "4. hapus produk", "5. verifikasi top up", "6. laporan penjualan", "7. hapus user", "8. keluar"],
                 ),
         ]
         answer = inquirer.prompt(menuuser)

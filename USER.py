@@ -27,8 +27,28 @@ def konfirmasipesanan(username):
 def historipembelian():
     print("histori")
 
-def topup():
-    print("top up")
+def topup(username):
+    try:
+        df = pd.read_csv('akun.csv')
+    except FileNotFoundError:
+        print("File tidak ditemukan.")
+        return
+    saldo = "Tidak ditemukan."
+    for i, j in df.iterrows():
+        if j["username"] == username:
+            saldo = j["saldo"]
+    print(f"Saldo anda: {saldo}")
+    try:
+        nominal = int(input("Masukkan nominal top up: "))
+        if nominal <= 0:
+            print("Nominal harus lebih dari 0.")
+            return
+    except ValueError:
+        print("Masukkan angka yang valid.")
+        return
+    df.loc[df['username'] == username, 'saldo'] += nominal
+    df.to_csv('akun.csv', index=False)
+    print(f"Top up sebesar {nominal} berhasil.")
     
 def loginuser(username):
     while True:
@@ -69,7 +89,7 @@ def loginuser(username):
             input("enter untuk kembali ke menu....")
         elif "7" in menuuser:
             judul("TOP UP SALDO")
-            topup()
+            topup(username)
             input("enter untuk kembali ke menu....")
         else:
             break

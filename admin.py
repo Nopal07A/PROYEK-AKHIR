@@ -1,9 +1,14 @@
 from prettytable import PrettyTable
 from create import lihatproduk,judul
+<<<<<<< Updated upstream
 
+=======
+from USER import antriTopUp
+>>>>>>> Stashed changes
 import pandas as pd
 import inquirer
 import os
+
 
 LP = {}
 
@@ -119,7 +124,58 @@ def hapusproduk():
     print("hapus produk")
 
 def verifikasitopup():
+<<<<<<< Updated upstream
     print("verifikasi top up")
+=======
+    if not antriTopUp:
+        print("Tidak ada antrian top up.")
+        return
+
+    table = PrettyTable()
+    table.field_names = ['No', 'Username', 'Nominal', 'Status']
+    pending= [i for i, req in enumerate(antriTopUp) if req['status'] == 'pending']
+
+    for i, j in enumerate(pending):
+        req = antriTopUp[j]
+        table.add_row([i + 1, req['username'], req['nominal'], req['status']])
+    print("Daftar Antrian Top Up (Pending):")
+    print(table)
+
+    try:
+        pilihan = int(input("Pilih nomor antrian untuk diverifikasi (0 untuk batal): "))
+        if pilihan == 0:
+            return
+        if not (1 <= pilihan <= len(pending)):
+            print("Pilihan tidak valid.")
+            return
+        
+        id = pending[pilihan - 1]
+        verifikasi = antriTopUp[id]
+
+        action_question = [
+            inquirer.List("action",
+                        message=f"Verifikasi top up untuk {verifikasi['username']} sebesar {verifikasi['nominal']}",
+                        choices=["Setujui", "Tolak"],
+            ),
+        ]
+        answer = inquirer.prompt(action_question)    
+        action = answer["action"]
+
+        if action == "Setujui":
+            df_akun = pd.read_csv('akun.csv')
+            user_index = df_akun.index[df_akun['username'] == verifikasi['username']].tolist()
+            if user_index:
+                df_akun.loc[user_index[0], 'saldo'] += verifikasi['nominal']
+                df_akun.to_csv('akun.csv', index=False)
+                verifikasi['status'] = 'approved'
+                print(f"Top up untuk {verifikasi['username']} sebesar {verifikasi['nominal']} telah disetujui.")
+        elif action == "Tolak":
+            verifikasi['status'] = 'gagal'
+            print(f"Top up untuk {verifikasi['username']} sebesar {verifikasi['nominal']} telah ditolak.")
+
+    except (ValueError, IndexError, TypeError):
+        print("Input tidak valid.")
+>>>>>>> Stashed changes
 
 def laporanpenjualan():
     print(LP)

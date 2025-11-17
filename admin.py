@@ -71,7 +71,7 @@ def tambahproduk():
     new_row = {"id": next_id, "nama": nama, "kategori": kategori, "harga": harga, "gender": gender, "stok": stok}
     df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
     try:
-        df.to_csv('produ.csv', index=False)
+        df.to_csv('produk.csv', index=False)
         print("Produk berhasil ditambahkan:")
         table = PrettyTable()
         table.field_names = ["id", "nama", "kategori", "harga", "gender", "stok"]

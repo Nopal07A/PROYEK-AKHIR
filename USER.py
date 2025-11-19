@@ -104,11 +104,11 @@ def hapuspesanan():
         return
     
     table = PrettyTable()
-    table.field_names = ["No", "Nama Produk", "Jumlah", "Harga Total"]
+    table.field_names = ["No", "Nama Produk", "Kategori", "Gender", "Jumlah", "Harga Total"]
     
     for no, item in pesanan.items():
         total = item['harga'] * item['jumlah']
-        table.add_row([no, item['nama'], item['jumlah'], total])
+        table.add_row([no, item['nama'], item['kategori'], item['gender'], item['jumlah'], total])
 
     print("\n=== DAFTAR PESANAN ===")
     print(table)

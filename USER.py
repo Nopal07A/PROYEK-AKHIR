@@ -186,7 +186,7 @@ def konfirmasipesanan(username):
     try:
         df_riwayat = pd.read_csv("riwayat.csv")
     except FileNotFoundError:
-        df_riwayat = pd.DataFrame(columns=["username", "nama_produk", "jumlah", "total"])
+        df_riwayat = pd.DataFrame(columns=["username", "nama_produk", "jumlah", "total", "tanggal"])
         
     for item in pesanan.values():
         total = item['jumlah'] * item['harga']
@@ -194,15 +194,33 @@ def konfirmasipesanan(username):
             "username": username,
             "nama_produk": item['nama'],
             "jumlah": item['jumlah'],
-            "total": total
+            "total": total,
         }
         
     df_riwayat.to_csv("riwayat.csv", index=False)
     pesanan.clear()
     print("konfirmasi pesanan")
 
-def historipembelian():
-    print("histori")
+def historipembelian(username):
+    try:
+        df = pd.read_csv('riwayat.csv')
+    except FileNotFoundError:
+        print("File tidak ditemukan.")
+        return
+    
+    riwayat = df[df['username'] == username]
+
+    if riwayat.empty:
+        print("Anda belum memiliki riwayat pembelian.")
+        return
+    
+    table = PrettyTable()
+    table.field_names = ["Nama Produk", "Jumlah", "Total Harga"]
+    for _, row in riwayat.iterrows():
+        table.add_row([row['nama_produk'], row['jumlah'], row['total']])
+    
+    print("=== RIWAYAT PEMBELIAN ANDA ===".center(45))
+    print(table)
 
 def topup(username):
     try:
@@ -267,7 +285,7 @@ def loginuser(username):
             input("enter untuk kembali ke menu....")
         elif "6" in menuuser: 
             judul("HISTORI PEMBELIAN")
-            historipembelian()
+            historipembelian(username)
             input("enter untuk kembali ke menu....")
         elif "7" in menuuser:
             judul("TOP UP SALDO")

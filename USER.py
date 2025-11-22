@@ -97,13 +97,130 @@ def tambahpesanan():
     print(f"Pesanan '{nama}' telah ditambahkan.")
 
 def hapuspesanan():
-    print("hapus pesanan")
+    global pesanan
+    
+    if not pesanan:
+        print("Tidak ada pesanan.")
+        return
+    
+    table = PrettyTable()
+    table.field_names = ["No", "Nama Produk", "Kategori", "Gender", "Jumlah", "Harga Total"]
+    
+    for no, item in pesanan.items():
+        total = item['harga'] * item['jumlah']
+        table.add_row([no, item['nama'], item['kategori'], item['gender'], item['jumlah'], total])
+
+    print("\n=== DAFTAR PESANAN ===")
+    print(table)
+
+    try:
+        pilih = int(input("Masukkan nomor pesanan yang ingin dihapus: "))
+    except ValueError:
+        print("Input harus angka.")
+        return
+
+    if pilih not in pesanan:
+        print("Nomor pesanan tidak ditemukan.")
+        return
+
+    item = pesanan[pilih]
+    produk_id = item['id']
+    jumlah_dihapus = item['jumlah']
+
+    del pesanan[pilih]
+
+    pesanan = {i+1: v for i, v in enumerate(pesanan.values())}
+
+    df = pd.read_csv('produk.csv')
+
+    if produk_id in df['id'].values:
+        df.loc[df['id'] == produk_id, 'stok'] += jumlah_dihapus
+        df.to_csv('produk.csv', index=False)
+    print("pesanan berhasil dihapus")
 
 def konfirmasipesanan(username):
-    print("konfirmasi pesanan")
+    global pesanan
+    
+    if not pesanan:
+        print("Tidak ada pesanan yang perlu dikonfirmasi.")
+        return
+    
+    table = PrettyTable()
+    table.field_names = ["No", "Nama Produk", "Kategori", "Gender", "Jumlah", "Harga Satuan", "Total"]
+    
+    total_semua = 0
+    for no, item in pesanan.items():
+        total = item['jumlah'] * item['harga']
+        table.add_row([no, item['nama'], item['kategori'], item['gender'], item['jumlah'], item['harga'], total])
+        total_semua += total
+        
+    print("=== KONFIRMASI PESANAN ===")
+    print(table)
+    print(f"Total yang harus dibayar: {total_semua}")
+    
+    try:
+        df_akun = pd.read_csv("akun.csv")
+    except FileNotFoundError:
+        print("File akun.csv tidak ditemukan.")
+        return
+    
+    if username not in df_akun['username'].values:
+        print("Akun tidak ditemukan.")
+        return
+    
+    saldo_user = int(df_akun.loc[df_akun['username'] == username, 'saldo'].iloc[0])
+    print(f"Saldo anda: {saldo_user}")
+    
+    if saldo_user < total_semua:
+        print("Saldo tidak cukup. Silakan top up terlebih dahulu.")
+        return
+    
+    pilihan = input("Konfirmasi pesanan? (y/n): ").lower()
+    if pilihan != "y":
+        print("Pesanan dibatalkan.")
+        return
+    
+    df_akun.loc[df_akun['username'] == username, 'saldo'] = saldo_user - total_semua
+    df_akun.to_csv("akun.csv", index=False)
+    
+    try:
+        df_riwayat = pd.read_csv("riwayat.csv")
+    except FileNotFoundError:
+        df_riwayat = pd.DataFrame(columns=["username", "nama_produk", "jumlah", "total", "tanggal"])
+        
+    for item in pesanan.values():
+        total = item['jumlah'] * item['harga']
+        df_riwayat.loc[len(df_riwayat)] = {
+            "username": username,
+            "nama_produk": item['nama'],
+            "jumlah": item['jumlah'],
+            "total": total,
+        }
+        
+    df_riwayat.to_csv("riwayat.csv", index=False)
+    pesanan.clear()
+    print("pesanan berhasil dikonfirmasi")
 
-def historipembelian():
-    print("histori")
+def historipembelian(username):
+    try:
+        df = pd.read_csv('riwayat.csv')
+    except FileNotFoundError:
+        print("File tidak ditemukan.")
+        return
+    
+    riwayat = df[df['username'] == username]
+
+    if riwayat.empty:
+        print("Anda belum memiliki riwayat pembelian.")
+        return
+    
+    table = PrettyTable()
+    table.field_names = ["Nama Produk", "Jumlah", "Total Harga"]
+    for _, row in riwayat.iterrows():
+        table.add_row([row['nama_produk'], row['jumlah'], row['total']])
+    
+    print("=== RIWAYAT PEMBELIAN ANDA ===".center(45))
+    print(table)
 
 def topup(username):
     try:
@@ -168,7 +285,7 @@ def loginuser(username):
             input("enter untuk kembali ke menu....")
         elif "6" in menuuser: 
             judul("HISTORI PEMBELIAN")
-            historipembelian()
+            historipembelian(username)
             input("enter untuk kembali ke menu....")
         elif "7" in menuuser:
             judul("TOP UP SALDO")

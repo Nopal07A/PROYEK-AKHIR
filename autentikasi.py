@@ -13,6 +13,8 @@ def registrasi():
         userbaru = input("Username(3-10 karakter) : ")
         if len(userbaru) < 3 or len(userbaru) > 10:
             raise ValueError("username harus 3-10 karakter")
+        if " " in userbaru:
+            raise ValueError("username tidak boleh mengandung spasi")
         if userbaru == "":
             raise ValueError("input tidak boleh kosong")
         if not re.match("^[A-Za-z0-9]+$", userbaru):
@@ -28,9 +30,11 @@ def registrasi():
 
         pwbaru = input("Password(4-10 karakter) : ")
         if len(pwbaru) < 4 or len(pwbaru) > 10:
-            raise ValueError("password harus 6-10 karakter")
+            raise ValueError("password harus 4-10 karakter")
         if pwbaru == "":
             raise ValueError("input tidak boleh kosong")
+        if " " in pwbaru:
+            raise ValueError("password tidak boleh mengandung spasi")
         if not re.match("^[A-Za-z0-9]+$", pwbaru):
             raise ValueError("password hanya boleh huruf dan angka")
         

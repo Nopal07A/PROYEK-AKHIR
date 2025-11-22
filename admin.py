@@ -275,28 +275,8 @@ def verifikasitopup():
         print("Input tidak valid.")
 
 def laporanpenjualan():
-    print("=== LAPORAN PENJUALAN ===")
-
-    try:
-        df = pd.read_csv("riwayat.csv")
-    except FileNotFoundError:
-        print("Belum ada data penjualan.")
-        return
-
-    if df.empty:
-        print("Belum ada data penjualan.")
-        return
-
-    table = PrettyTable()
-    table.field_names = ["No", "Username", "Nama Produk", "Jumlah", "Total"]
-
-    for idx, row in df.iterrows():
-        table.add_row([idx + 1, row['username'], row['nama_produk'], row['jumlah'], row['total']])
-
-    print(table)
-
-    total_pemasukan = df['total'].sum()
-    print(f"Total pemasukan: {total_pemasukan}")
+    print(LP)
+    print("laporan penjualan")
 
 def hapususer():
     akun_cols = ["id", "username", "password", "role", "saldo"]

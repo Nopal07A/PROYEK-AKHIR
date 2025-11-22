@@ -9,9 +9,10 @@ import os
 LP = {}
 
 def tambahproduk():
+    FILE_PATH = os.path.join(os.path.dirname(__file__), "produk.csv")
     columns_required = ["id", "nama", "kategori", "harga", "gender", "stok"]
     try:
-        df = pd.read_csv('produk.csv')
+        df = pd.read_csv(FILE_PATH)
         for col in columns_required:
             if col not in df.columns:
                 raise ValueError("Struktur produk.csv tidak sesuai: kolom '" + col + "' tidak ditemukan")
@@ -71,7 +72,7 @@ def tambahproduk():
     new_row = {"id": next_id, "nama": nama, "kategori": kategori, "harga": harga, "gender": gender, "stok": stok}
     df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
     try:
-        df.to_csv('produk.csv', index=False)
+        df.to_csv('produ.csv', index=False)
         print("Produk berhasil ditambahkan:")
         table = PrettyTable()
         table.field_names = ["id", "nama", "kategori", "harga", "gender", "stok"]

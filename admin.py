@@ -331,8 +331,8 @@ def hapususer():
 
     if metode.startswith("1"):
         try:
-            id_str = input("Masukkan ID user yang akan dihapus: ").strip()
-            target_id = int(id_str)
+            id = input("Masukkan ID user yang akan dihapus: ").strip()
+            target_id = int(id)
         except ValueError:
             print("ID harus berupa angka.")
             return
@@ -349,7 +349,7 @@ def hapususer():
         if konfirmasi != 'y':
             print("Penghapusan dibatalkan.")
             return
-        df_baru = df[df['id'] != target_id]
+        df_baru = df.loc[df['id'] != target_id].copy()
     else:
         username = input("Masukkan username yang akan dihapus: ").strip()
         if username == "":
@@ -365,8 +365,10 @@ def hapususer():
         if konfirmasi != 'y':
             print("Penghapusan dibatalkan.")
             return
-        df_baru = df[df['username'] != username]
+        df_baru = df.loc[df['username'] != username].copy()
+        
     try:
+        df_baru['id'] = range(1, len(df_baru) + 1)
         df_baru.to_csv('akun.csv', index=False)
         print("User berhasil dihapus.")
     except Exception as e:

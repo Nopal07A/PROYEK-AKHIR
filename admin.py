@@ -31,7 +31,7 @@ def tambahproduk():
             print("Kolom id mengandung nilai tidak valid.")
             return
 
-    nama = input("Masukkan nama produk: ").strip()
+    nama = input("Masukkan nama produk ").strip()
     if not nama:
         print("Nama produk tidak boleh kosong.")
         return

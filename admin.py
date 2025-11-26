@@ -30,6 +30,9 @@ def tambahproduk():
             return
 
     nama = input(Fore.YELLOW + "Masukkan nama produk: ").strip()
+    if nama.isdigit():
+        print(Fore.RED + "Nama produk tidak boleh angka saja")
+        return
     if not nama:
         print(Fore.RED + "Nama produk tidak boleh kosong.")
         return
@@ -116,6 +119,9 @@ def updateproduk():
     ubah = answer["opsi"]
     if "1" in ubah:
         nama_baru = input(Fore.YELLOW + "Masukkan nama baru produk: ")
+        if nama_baru.isdigit():
+            print(Fore.RED + "Nama produk tidak boleh angka saja")
+            return
         if nama_baru != produk['nama'].values[0]:
             df.at[indeks, 'nama'] = nama_baru
             df.to_csv('produk.csv', index=False)
@@ -148,6 +154,9 @@ def updateproduk():
     elif "3" in ubah:
         try:
             stok_baru = int(input(Fore.YELLOW + "Masukkan stok baru produk: "))
+            if stok_baru < 0:
+                print("stok harus sama dengan atau di atas nol")
+                return
         except ValueError:
             print(Fore.RED + "Stok harus berupa angka.")
             return
@@ -160,6 +169,9 @@ def updateproduk():
     elif "4" in ubah:
         try:
             harga_baru = int(input(Fore.YELLOW + "Masukkan harga baru produk: "))
+            if harga_baru < 0:
+                print("harga harus sama dengan atau di atas nol")
+                return
         except ValueError:
             print(Fore.RED + "Harga harus berupa angka.")
             return
